@@ -1,10 +1,12 @@
 from plugins.jinja2png import keyboards
 from pyrogram import filters
 import requests
+import pyrogram
 import os
 
 set_template = filters.create(lambda _, __, data: data.data.split("=")[0] == 'set_template')
-url = f"http://{os.environ['JINJA2PNG_HOST']}:{os.environ['JINJA2PNG_PORT']}/template/list"
+if 'JINJA2PNG_HOST' in os.environ.keys():
+    url = f"http://{os.environ['JINJA2PNG_HOST']}:{os.environ['JINJA2PNG_PORT']}/template/list"
 text_command = filters.create(lambda _, __, message: message.text in keyboards.menu)
 
 
@@ -36,3 +38,31 @@ def remove_photo(file_id):
     """
     remove_file(f'temp/{file_id}.jpg')
     remove_file(f'temp/{file_id}.png')
+
+
+async def download_callback(current, total, status):
+    """
+    Callback чтобы показывать юзеру % скачивания файла на сервер
+    :param current:
+    :param total:
+    :param status:
+    :return:
+    """
+    try:
+        await status.edit_text(f'Скачал {int((current / total) * 100)}%')
+    except pyrogram.errors.exceptions.bad_request_400.MessageNotModified:
+        pass
+
+
+async def upload_callback(current, total, status):
+    """
+    Callback чтобы показывать юзеру % загрузки файла на сервер
+    :param current:
+    :param total:
+    :param status:
+    :return:
+    """
+    try:
+        await status.edit_text(f'Загрузил {int((current / total) * 100)}%')
+    except pyrogram.errors.exceptions.bad_request_400.MessageNotModified:
+        pass

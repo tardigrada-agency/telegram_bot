@@ -75,3 +75,37 @@ def add_activity(user_id: int, task_type: str, task_name: str, task_note: str, t
                    'VALUES (%s::integer, %s, %s, %s, %s, %s)', [user_id, task_type, task_name,
                                                                 task_note, time_started, time_ended])
     connection.commit()
+
+#
+# def create_tables_if_not_exists():
+#     cursor.execute('INSERT INTO activity (user_id, task_type, task_name, task_note, time_started, time_ended) '
+#                    'VALUES (%s::integer, %s, %s, %s, %s, %s)', [user_id, task_type, task_name,
+#                                                                 task_note, time_started, time_ended])
+#     connection.commit("""CREATE TABLE IF NOT EXISTS users (
+#                          telegram_id INT NOT NULL UNIQUE,
+#                          username VARCHAR(50) UNIQUE,
+#                          name VARCHAR(255),
+#                          position VARCHAR(255),
+#                          is_admin BOOLEAN DEFAULT false,
+#                          task_type VARCHAR(255) NOT NULL DEFAULT 'menu',
+#                          date TIMESTAMP NOT NULL DEFAULT now()
+#                      );""")
+#     connection.commit("""CREATE TABLE IF NOT EXISTS activity (
+#                          user_id INT NOT NULL,
+#                          task_type VARCHAR(255) NOT NULL,
+#                          task_name VARCHAR(255) NOT NULL,
+#                          task_note VARCHAR(255),
+#                          time_started TIMESTAMP NOT NULL,
+#                          time_ended TIMESTAMP NOT NULL DEFAULT now()
+#                      );""")
+#     connection.commit("""CREATE TABLE IF NOT EXISTS watermark (
+#                          user_id INT NOT NULL UNIQUE,
+#                          color VARCHAR(255) NOT NULL,
+#                          type VARCHAR(255) NOT NULL,
+#                          mode VARCHAR(255) NOT NULL,
+#                          size INT NOT NULL
+#                      );""")
+#     connection.commit()
+#
+#
+# create_tables_if_not_exists()

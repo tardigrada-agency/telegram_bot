@@ -30,7 +30,7 @@ async def zip_file(client, message):
 
         # Раскрываем архив
         os.mkdir(f'temp/{message.document.file_unique_id}')
-        await status.edit_text('extracting....')
+        await status.edit_text('Распаковка...')
         with zipfile.ZipFile(f'temp/{message.document.file_unique_id}.zip', 'r') as zipObj:
             zipObj.extractall(f'temp/{message.document.file_unique_id}/')
 

@@ -9,8 +9,8 @@ menu = ['выбрать', 'меню']
 menu_keyboard = ReplyKeyboardMarkup([
     *([KeyboardButton(k)] for k in menu)
 ])
-
-url = f"http://{os.environ['JINJA2PNG_HOST']}:{os.environ['JINJA2PNG_PORT']}/template/list"
+if 'JINJA2PNG_HOST' in os.environ.keys():
+    url = f"http://{os.environ['JINJA2PNG_HOST']}:{os.environ['JINJA2PNG_PORT']}/template/list"
 
 
 def get_template_list_keyboard() -> pyrogram.types.InlineKeyboardMarkup:
