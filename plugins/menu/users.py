@@ -140,4 +140,3 @@ async def userdel(client, message):
                 reply_markup=ReplyKeyboardRemove(),
           )
     await message.reply_text(f'`{user_id}` удален из базы.')
-\
