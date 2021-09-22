@@ -12,6 +12,8 @@ async def menu(_, message):
     :param message: сообщение
     :return:
     """
+    utils.update_username_in_db_if_not_matches(message.from_user.id, message.from_user.username)
+    
     text = f"Ты вышел в главное меню.\n" \
            f"Выбери, что будем делать дальше на клавиатуре внизу экрана"
     db.set_task_type(message.from_user.id, 'menu')
@@ -21,4 +23,10 @@ async def menu(_, message):
 @Client.on_message(filters.command('keyboard') & filters.private & utils.check_user &
                    utils.task_type_filter('menu'))
 async def keyboard(_, message):
+    """
+    Возвращает юзеру клавиатуру
+    :param _: Клиент для работы с телеграмом, нам он не нужен
+    :param message: сообщение
+    :return:
+    """
     await message.reply_text('Воть ^-^', reply_markup=keyboards.menu_keyboard)

@@ -14,6 +14,8 @@ async def menu(_, message):
     :param message: сообщение
     :return:
     """
+    utils.update_username_in_db_if_not_matches(message.from_user.id, message.from_user.username)
+
     template_list = jinja2png_utils.get_template_list()
     if len(template_list) >= 1:
         if not jinja2png_db.check_user(message.from_user.id):

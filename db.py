@@ -25,10 +25,18 @@ def add_user(telegram_id: int, username: str = None, name: str = '', position: s
     :param name: Имя пользователя
     :param username: username пользователя в telegram
     :param telegram_id: Ид пользователя в telegram
-    :return:
     """
     cursor.execute('INSERT INTO users (telegram_id, username, name, position, is_admin) '
                    'VALUES (%s::integer, %s, %s, %s, %s)', [telegram_id, username, name, position, is_admin])
+    connection.commit()
+
+
+def delete_user(telegram_id: int):
+    """
+    Удаления юзера из базы
+    :param telegram_id: Ид пользователя в telegram
+    """
+    cursor.execute('DELETE FROM users WHERE telegram_id=%s::integer', [telegram_id])
     connection.commit()
 
 
@@ -36,7 +44,6 @@ def get_user(telegram_id: int):
     """
     Получает юзера из базы
     :param telegram_id: Ид пользователя в telegram
-    :return:
     """
     cursor.execute('SELECT telegram_id, username, name, position, is_admin, date, task_type '
                    'FROM users WHERE telegram_id=%s::integer', [int(telegram_id)])
@@ -44,11 +51,50 @@ def get_user(telegram_id: int):
     return record
 
 
-def check_user_in_users(telegram_id) -> bool:
+def get_users():
+    """
+    Получает всех юзеров из базы
+    """
+    cursor.execute('SELECT telegram_id, username, name, position, is_admin, date, task_type FROM users')
+    record = cursor.fetchall()
+    return record
+
+
+def user_is_admin(telegram_id: int) -> bool:
+    """
+    Проверка  юзер админ или нет
+    :param telegram_id: Ид пользователя в telegram
+    :return: True если юзер админ
+    """
+    cursor.execute('SELECT is_admin FROM users WHERE telegram_id=%s::integer', [int(telegram_id)])
+    record = cursor.fetchone()
+    return record[0] if record else False
+
+
+def get_username(telegram_id: int) -> str:
+    """
+    Получение username юзера из базы
+    :param telegram_id: Ид пользователя в telegram
+    :return: username
+    """
+    cursor.execute('SELECT username FROM users WHERE telegram_id=%s::integer', [int(telegram_id)])
+    record = cursor.fetchone()
+    return record[0]
+
+
+def set_username(telegram_id: int, new_username: str):
+    """
+    Установка нового username в базу
+    """
+    cursor.execute(f"UPDATE users SET username = %s WHERE telegram_id = %s::integer;", [new_username, int(telegram_id)])
+    connection.commit()
+
+
+def check_user_in_users(telegram_id: int) -> bool:
     """
     Проверка есть ли юзер в базе
     :param telegram_id: Ид пользователя в telegram
-    :return:
+    :return: True если юзер в базе
     """
     cursor.execute('SELECT telegram_id FROM users WHERE telegram_id=%s::integer', [int(telegram_id)])
     record = cursor.fetchone()
@@ -56,6 +102,11 @@ def check_user_in_users(telegram_id) -> bool:
 
 
 def set_task_type(telegram_id: int, task_type: str):
+    """
+    Утановка нового типа задачи для юзера
+    :param telegram_id: Ид юзера в телеграм
+    :param task_type: Новый тип задачи который нужно устоновить
+    """
     cursor.execute(f"UPDATE users SET task_type = %s WHERE telegram_id = %s::integer;", [task_type, int(telegram_id)])
     connection.commit()
 
@@ -69,43 +120,8 @@ def add_activity(user_id: int, task_type: str, task_name: str, task_note: str, t
     :param task_note: комментарий к задаче
     :param time_started: время начала задачи
     :param time_ended: время конца задачи
-    :return:
     """
     cursor.execute('INSERT INTO activity (user_id, task_type, task_name, task_note, time_started, time_ended) '
                    'VALUES (%s::integer, %s, %s, %s, %s, %s)', [user_id, task_type, task_name,
                                                                 task_note, time_started, time_ended])
     connection.commit()
-
-#
-# def create_tables_if_not_exists():
-#     cursor.execute('INSERT INTO activity (user_id, task_type, task_name, task_note, time_started, time_ended) '
-#                    'VALUES (%s::integer, %s, %s, %s, %s, %s)', [user_id, task_type, task_name,
-#                                                                 task_note, time_started, time_ended])
-#     connection.commit("""CREATE TABLE IF NOT EXISTS users (
-#                          telegram_id INT NOT NULL UNIQUE,
-#                          username VARCHAR(50) UNIQUE,
-#                          name VARCHAR(255),
-#                          position VARCHAR(255),
-#                          is_admin BOOLEAN DEFAULT false,
-#                          task_type VARCHAR(255) NOT NULL DEFAULT 'menu',
-#                          date TIMESTAMP NOT NULL DEFAULT now()
-#                      );""")
-#     connection.commit("""CREATE TABLE IF NOT EXISTS activity (
-#                          user_id INT NOT NULL,
-#                          task_type VARCHAR(255) NOT NULL,
-#                          task_name VARCHAR(255) NOT NULL,
-#                          task_note VARCHAR(255),
-#                          time_started TIMESTAMP NOT NULL,
-#                          time_ended TIMESTAMP NOT NULL DEFAULT now()
-#                      );""")
-#     connection.commit("""CREATE TABLE IF NOT EXISTS watermark (
-#                          user_id INT NOT NULL UNIQUE,
-#                          color VARCHAR(255) NOT NULL,
-#                          type VARCHAR(255) NOT NULL,
-#                          mode VARCHAR(255) NOT NULL,
-#                          size INT NOT NULL
-#                      );""")
-#     connection.commit()
-#
-#
-# create_tables_if_not_exists()

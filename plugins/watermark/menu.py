@@ -14,6 +14,8 @@ async def menu(_, message):
     :param message: сообщение
     :return:
     """
+    utils.update_username_in_db_if_not_matches(message.from_user.id, message.from_user.username)
+
     if not watermark_db.check_user(message.from_user.id):
         watermark_db.add_user(message.from_user.id, modes.default['color'],
                               modes.default['type'], modes.default['mode'],

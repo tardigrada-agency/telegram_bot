@@ -49,3 +49,12 @@ def add_user(user_id: int, color: str, logo_type: str, mode: str, size: int):
     cursor.execute("INSERT INTO watermark (user_id, color, type, mode, size) "
                    "VALUES (%s::integer, %s, %s, %s, %s::integer);", [int(user_id), color, logo_type, mode, int(size)])
     connection.commit()
+
+
+def delete_user(telegram_id: int):
+    """
+    Удаления юзера из базы
+    :param telegram_id: Ид пользователя в telegram
+    """
+    cursor.execute('DELETE FROM watermark WHERE telegram_id=%s::integer', [telegram_id])
+    connection.commit()

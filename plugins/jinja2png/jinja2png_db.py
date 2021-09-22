@@ -44,3 +44,12 @@ def add_user(user_id: int, template: str):
     """
     cursor.execute("INSERT INTO jinja2png (user_id, template) VALUES (%s::integer, %s);", [int(user_id), template])
     connection.commit()
+
+
+def delete_user(telegram_id: int):
+    """
+    Удаления юзера из базы
+    :param telegram_id: Ид пользователя в telegram
+    """
+    cursor.execute('DELETE FROM jinja2png WHERE telegram_id=%s::integer', [telegram_id])
+    connection.commit()

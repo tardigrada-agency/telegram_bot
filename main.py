@@ -5,7 +5,7 @@ import os
 #   Если в базе нет админа - добавим его
 admin_id = int(os.environ['ADMIN_TELEGRAM_ID'])
 if not db.check_user_in_users(admin_id):
-    db.add_user(admin_id)
+    db.add_user(admin_id, is_admin=True)
 
 #   Запускаем бота
 plugins = dict(root='plugins')

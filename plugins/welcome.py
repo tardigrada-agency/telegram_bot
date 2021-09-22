@@ -12,15 +12,18 @@ async def send_welcome(_, message):
     :param message:
     :return:
     """
+
     text_new = f"Привет!\n" \
-               f"Я бот mediathings созданный для @sotavision, @volnitsamedia и @tardigrada_agency!\n" \
+               f"Я бот mediathings созданный для @sotavision, @volnitsamedia и @tardigrada_agency\n" \
                f"Твой ID: `{message.from_user.id}`\n" \
                f"Скажи свой ID админу, чтобы он тебя добавил.\n"
     text_old = f"Привет!\n" \
-               f"Я бот mediathings созданный для @sotavision, @volnitsamedia и @tardigrada_agency!\n" \
+               f"Я бот mediathings созданный для @sotavision, @volnitsamedia и @tardigrada_agency\n" \
                f"Твой ID: `{message.from_user.id}`\n" \
                f"Ты уже в базе, поэтому вот тебе клавиатура :)"
     if db.check_user_in_users(message.from_user.id):
+        utils.update_username_in_db_if_not_matches(message.from_user.id, message.from_user.username)
+
         await message.reply_text(text_old, reply_markup=keyboards.menu_keyboard)
     else:
         await message.reply_text(text_new)

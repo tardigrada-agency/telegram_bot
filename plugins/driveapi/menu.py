@@ -12,6 +12,8 @@ async def search(_, message):
     :param message: сообщение
     :return:
     """
+    utils.update_username_in_db_if_not_matches(message.from_user.id, message.from_user.username)
+
     text = f"Ты вошел в режим поиска фотографий.\n" \
            f"Пришли мне запрос, я пришлю тебе фотографии"
     db.set_task_type(message.from_user.id, 'driveapi')
