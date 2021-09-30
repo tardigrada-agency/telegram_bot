@@ -134,9 +134,12 @@ async def userdel(client, message):
         watermark_db.delete_user(user_id)
     if jinja2png_db.check_user(user_id):
         jinja2png_db.delete_user(user_id)
-    await client.send_message(
-                chat_id=user_id,
-                text='Тебя удалили из базы, тебе больше не доступны функции бота.',
-                reply_markup=ReplyKeyboardRemove(),
-          )
+    try:
+        await client.send_message(
+                    chat_id=user_id,
+                    text='Тебя удалили из базы, тебе больше не доступны функции бота.',
+                    reply_markup=ReplyKeyboardRemove(),
+              )
+    except:
+        pass
     await message.reply_text(f'`{user_id}` удален из базы.')

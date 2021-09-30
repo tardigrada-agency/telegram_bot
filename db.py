@@ -1,7 +1,3 @@
-# from mongoengine.fields import StringField, IntField
-# from mongoengine import Document
-# from mongoengine import connect
-# import config
 import psycopg2
 import os
 
