@@ -13,6 +13,7 @@ connection = psycopg2.connect(
     port=os.environ['POSTGRES_PORT'],
     database=os.environ['POSTGRES_DB']
 )
+cursor = connection.cursor()
 
 
 def add_user(telegram_id: int, username: str = None, name: str = '', position: str = '', is_admin: bool = False):
@@ -24,7 +25,6 @@ def add_user(telegram_id: int, username: str = None, name: str = '', position: s
     :param username: username пользователя в telegram
     :param telegram_id: Ид пользователя в telegram
     """
-    cursor = connection.cursor()
     cursor.execute('INSERT INTO users (telegram_id, username, name, position, is_admin) '
                    'VALUES (%s::integer, %s, %s, %s, %s)', [telegram_id, username, name, position, is_admin])
     connection.commit()
@@ -35,7 +35,6 @@ def delete_user(telegram_id: int):
     Удаления юзера из базы
     :param telegram_id: Ид пользователя в telegram
     """
-    cursor = connection.cursor()
     cursor.execute('DELETE FROM users WHERE telegram_id=%s::integer', [telegram_id])
     connection.commit()
 
@@ -45,7 +44,6 @@ def get_user(telegram_id: int):
     Получает юзера из базы
     :param telegram_id: Ид пользователя в telegram
     """
-    cursor = connection.cursor()
     cursor.execute('SELECT telegram_id, username, name, position, is_admin, date, task_type '
                    'FROM users WHERE telegram_id=%s::integer', [int(telegram_id)])
     record = cursor.fetchone()
@@ -56,7 +54,6 @@ def get_users():
     """
     Получает всех юзеров из базы
     """
-    cursor = connection.cursor()
     cursor.execute('SELECT telegram_id, username, name, position, is_admin, date, task_type FROM users')
     record = cursor.fetchall()
     return record
@@ -68,7 +65,6 @@ def user_is_admin(telegram_id: int) -> bool:
     :param telegram_id: Ид пользователя в telegram
     :return: True если юзер админ
     """
-    cursor = connection.cursor()
     cursor.execute('SELECT is_admin FROM users WHERE telegram_id=%s::integer', [int(telegram_id)])
     record = cursor.fetchone()
     return record[0] if record else False
@@ -80,7 +76,6 @@ def get_username(telegram_id: int) -> str:
     :param telegram_id: Ид пользователя в telegram
     :return: username
     """
-    cursor = connection.cursor()
     cursor.execute('SELECT username FROM users WHERE telegram_id=%s::integer', [int(telegram_id)])
     record = cursor.fetchone()
     return record[0]
@@ -90,7 +85,6 @@ def set_username(telegram_id: int, new_username: str):
     """
     Установка нового username в базу
     """
-    cursor = connection.cursor()
     cursor.execute(f"UPDATE users SET username = %s WHERE telegram_id = %s::integer;", [new_username, int(telegram_id)])
     connection.commit()
 
@@ -101,7 +95,6 @@ def check_user_in_users(telegram_id: int) -> bool:
     :param telegram_id: Ид пользователя в telegram
     :return: True если юзер в базе
     """
-    cursor = connection.cursor()
     cursor.execute('SELECT telegram_id FROM users WHERE telegram_id=%s::integer', [int(telegram_id)])
     record = cursor.fetchone()
     return True if record else False
@@ -113,7 +106,6 @@ def set_task_type(telegram_id: int, task_type: str):
     :param telegram_id: Ид юзера в телеграм
     :param task_type: Новый тип задачи который нужно устоновить
     """
-    cursor = connection.cursor()
     cursor.execute(f"UPDATE users SET task_type = %s WHERE telegram_id = %s::integer;", [task_type, int(telegram_id)])
     connection.commit()
 
@@ -128,7 +120,6 @@ def add_activity(user_id: int, task_type: str, task_name: str, task_note: str, t
     :param time_started: время начала задачи
     :param time_ended: время конца задачи
     """
-    cursor = connection.cursor()
     cursor.execute('INSERT INTO activity (user_id, task_type, task_name, task_note, time_started, time_ended) '
                    'VALUES (%s::integer, %s, %s, %s, %s, %s)', [user_id, task_type, task_name,
                                                                 task_note, time_started, time_ended])
