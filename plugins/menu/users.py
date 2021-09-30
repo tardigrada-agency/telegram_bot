@@ -55,9 +55,9 @@ async def users(_, message):
     for u in users_from_db:
         text += f"\n" \
                 f"| {str(u[0])+' '*(10-len(str(u[0])))} " \
-                f"| {u[1]+' '*(20-len(u[1]))} " \
-                f"| {u[2]+' '*(20-len(u[2]))} " \
-                f"| {u[3]+' '*(12-len(u[3]))} " \
+                f"| {u[1]+' '*(20-len(str(u[1])))} " \
+                f"| {u[2]+' '*(20-len(str(u[2])))} " \
+                f"| {u[3]+' '*(12-len(str(u[3])))} " \
                 f"| {'да ' if u[4] else 'нет'}      " \
                 f"| {u[5]} |\n"
 
