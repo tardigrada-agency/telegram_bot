@@ -19,7 +19,7 @@ cursor = connection.cursor()
 def add_user(telegram_id: int, username: str = None, name: str = '', position: str = '', is_admin: bool = False):
     """
     Добавляет юзера в базу
-    :param is_admin: True если пользователь админ
+    :param is_admin: True если пользователь admin
     :param position: Должность пользователя в медиа
     :param name: Имя пользователя
     :param username: username пользователя в telegram
