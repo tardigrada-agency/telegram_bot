@@ -42,16 +42,20 @@ async def zip_file(client, message):
             for file in files:
                 if re_video.match(file.lower()):
                     await status.edit_text(f'Обработка видео {file}')
-                    await watermark_utils.draw_logo_on_video(file, user[4], user[1], user[2], user[3],
-                                                   folder=message.document.file_unique_id)
+                    watermark_status = await watermark_utils.draw_logo_on_video(file,
+                                                                                user[4], user[1], user[2], user[3],
+                                                                                folder=message.document.file_unique_id)
+                    if watermark_status['error']:
+                        await status.edit_text(watermark_status['status'])
+                        return
                 elif re_photo.match(file.lower()):
                     await status.edit_text(f'Обработка фотографии {file}')
-                    await watermark_utils.draw_logo_on_photo(file, user[4], user[1], user[2], user[3],
-                                                   folder=message.document.file_unique_id)
-                    shutil.move(f'temp/{message.document.file_unique_id}'
-                                f'{root.replace(f"temp/{message.document.file_unique_id}", "")}/'
-                                f'{watermark_utils.get_filename(file)}_logo.jpg',
-                                f'temp/{message.document.file_unique_id}_logo/{file}')
+                    watermark_status = await watermark_utils.draw_logo_on_photo(file,
+                                                                                user[4], user[1], user[2], user[3],
+                                                                                folder=message.document.file_unique_id)
+                    if watermark_status['error']:
+                        await status.edit_text(watermark_status['status'])
+                        return
                 else:
                     await status.edit_text(f'Копирование {file} без добавление ватермарки')
                     shutil.move(f'temp/{message.document.file_unique_id}/{file}',

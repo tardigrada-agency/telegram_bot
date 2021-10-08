@@ -2,8 +2,7 @@ from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, \
     ReplyKeyboardMarkup, KeyboardButton
 from plugins.watermark import modes
 # Клавиатура для выбора цвета логотипа
-# colors = {'🔴': 'red', '⚫': 'black', '⚪': 'white', '🟢': 'green'}
-colors = {'⚫': 'black', '⚪': 'white'}
+colors = {'🔴': 'red', '⚫': 'black', '⚪': 'white', '🟢': 'green'}
 color_keyboard = InlineKeyboardMarkup([[
     *(InlineKeyboardButton(k, callback_data=f'new_color={v}') for k, v in colors.items())
 ]])
@@ -15,7 +14,7 @@ size_keyboard = InlineKeyboardMarkup([[
 ]])
 
 # Клавиатура для выбора типа логотипа
-types = {'птица': 'bird', 'текст': 'text'}
+types = {'русский': 'rus', 'английский': 'eng'}
 type_keyboard = InlineKeyboardMarkup([[
     *(InlineKeyboardButton(k, callback_data=f'new_type={v}') for k, v in types.items())
 ]])

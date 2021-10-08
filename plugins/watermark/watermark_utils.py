@@ -4,6 +4,7 @@ import subprocess as sp
 import requests
 import pyrogram
 import shutil
+import json
 import os
 
 # Custom filters
@@ -17,6 +18,14 @@ document_image = filters.create(
     lambda _, __, message: message.document.mime_type.split("/")[0] == 'image' if message.document else False)
 document_zip = filters.create(
     lambda _, __, message: message.document.mime_type == 'application/zip' if message.document else False)
+
+
+def is_json(s: str):
+    try:
+        json_object = json.loads(s)
+    except ValueError as e:
+        return False
+    return True
 
 
 def get_filename(path: str) -> str:
@@ -94,7 +103,7 @@ async def upload_callback(current, total, status):
         pass
 
 
-async def draw_logo_on_photo(file, size, color, logo_type, mode, folder=''):
+async def draw_logo_on_photo(file, size, color, logo_type, mode, folder='') -> bool:
     """
     Функция добавления логотипа размера: size, цвета: color, языка: lang на фото
     :param mode: Режим добавление логотипа
@@ -116,12 +125,18 @@ async def draw_logo_on_photo(file, size, color, logo_type, mode, folder=''):
     headers = {}
 
     response = requests.request("POST", url, headers=headers, data=payload, files=files)
+    response_text = response.text
+    if is_json(response_text):
+        status = json.loads(response_text)
+        return status
 
     with open(f'temp/{folder+"_logo/" if folder else ""}{get_filename(file)}_logo.jpg', 'wb') as file:
         file.write(response.content)
 
+    return {'error': False, 'status': ''}
 
-async def draw_logo_on_video(file, size, color, logo_type, mode, folder=''):
+
+async def draw_logo_on_video(file, size, color, logo_type, mode, folder='') -> bool:
     """
     Функция добавления логотипа размера: size, цвета: color, языка: lang на видео
     :param mode: Режим добавление логотипа
@@ -143,6 +158,12 @@ async def draw_logo_on_video(file, size, color, logo_type, mode, folder=''):
     headers = {}
 
     response = requests.request("POST", url, headers=headers, data=payload, files=files)
+    response_text = response.text
+    if is_json(response_text):
+        status = json.loads(response_text)
+        return status
 
     with open(f'temp/{folder+"_logo/" if folder else ""}{get_filename(file)}_logo.mp4', 'wb') as file:
         file.write(response.content)
+
+    return {'error': False, 'status': ''}

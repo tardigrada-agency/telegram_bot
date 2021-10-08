@@ -26,8 +26,11 @@ async def photo(client, message):
         await download_photo(message.photo, client, status)
 
         # Обработка фотографии
-        await watermark_utils.draw_logo_on_photo(f'{message.photo.file_unique_id}.jpg', user[4], user[1], user[2], user[3])
-
+        watermark_status = await watermark_utils.draw_logo_on_photo(f'{message.photo.file_unique_id}.jpg', user[4], user[1], user[2], user[3])
+        if watermark_status['error']:
+            await status.edit_text(watermark_status['status'])
+            return
+        
         # Отправляем фото в телеграмм
         await client.send_chat_action(message.chat.id, action='upload_photo')
         await client.send_photo(chat_id=message.from_user.id,
@@ -65,9 +68,12 @@ async def photo_document(client, message):
 
         # Обработка фотографии
         await status.edit_text('Обработка...')
-        await watermark_utils.draw_logo_on_photo(f'{message.document.file_unique_id}.jpg', user[4], user[1],
-                                                 user[2], user[3])
-
+        watermark_status = await watermark_utils.draw_logo_on_photo(f'{message.document.file_unique_id}.jpg', user[4],
+                                                                    user[1], user[2], user[3])
+        if watermark_status['error']:
+            await status.edit_text(watermark_status['status'])
+            return
+        
         # Отправляем фото в телеграмм
         await client.send_chat_action(message.chat.id, action='upload_document')
         await client.send_document(chat_id=message.from_user.id,

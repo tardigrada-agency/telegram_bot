@@ -25,8 +25,11 @@ async def video(client, message):
 
         # Запукаем ffmpeg для нашего видео
         await status.edit_text('Обработка...')
-        await watermark_utils.draw_logo_on_video(f'{message.video.file_unique_id}.mp4', user[4], user[1], user[2],
-                                                 user[3])
+        watermark_status = await watermark_utils.draw_logo_on_video(f'{message.video.file_unique_id}.mp4',
+                                                                    user[4], user[1], user[2], user[3])
+        if watermark_status['error']:
+            await status.edit_text(watermark_status['status'])
+            return
 
         # Загружаем видео обратно в телеграмм
         await client.send_chat_action(message.chat.id, action='upload_video')
@@ -63,8 +66,11 @@ async def video_document(client, message):
         await download_video(message.document, client, status)
 
         # Запукаем ffmpeg для нашего видео
-        await watermark_utils.draw_logo_on_video(f'{message.document.file_unique_id}.mp4', user[4], user[1], user[2],
-                                                 user[3])
+        watermark_status = await watermark_utils.draw_logo_on_video(f'{message.document.file_unique_id}.mp4',
+                                                                    user[4], user[1], user[2], user[3])
+        if watermark_status['error']:
+            await status.edit_text(watermark_status['status'])
+            return
 
         # Загружаем видео обратно в телеграмм
         await client.send_chat_action(message.chat.id, action='upload_video')
