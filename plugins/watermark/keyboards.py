@@ -14,15 +14,17 @@ size_keyboard = InlineKeyboardMarkup([[
 ]])
 
 # Клавиатура для выбора типа логотипа
-types = {'русский': 'rus', 'английский': 'eng'}
 type_keyboard = InlineKeyboardMarkup([[
-    *(InlineKeyboardButton(k, callback_data=f'new_type={v}') for k, v in types.items())
+    *(InlineKeyboardButton(v['button_text'], callback_data=f'new_type={k}') for k, v in modes.modes.items())
 ]])
 
 # Создания клавиатуры выбора режима работы
-modes_keyboard = InlineKeyboardMarkup([[
-    *(InlineKeyboardButton(v["button_text"], callback_data=f'new_mode={k}') for k, v in modes.modes.items())
-]])
+modes_keyboard = {}
+for logo_type in modes.modes.keys():
+    modes_keyboard[logo_type] = InlineKeyboardMarkup([[
+        *(InlineKeyboardButton(v["button_text"], callback_data=f'new_mode={k}')
+          for k, v in modes.modes[logo_type]['mode'].items())
+    ]])
 
 # Главное меню
 watermark_menu = ('цвет', 'размер', 'режим', 'тип', 'меню')

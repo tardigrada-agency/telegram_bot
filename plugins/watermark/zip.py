@@ -20,6 +20,7 @@ async def zip_file(client, message):
     """
     watermark_utils.remove_zip(message.document.file_unique_id)  # Удаляем архив с таким ид если оно уже почему-то есть
     try:
+        error = False
         user = watermark_db.get_user(message.from_user.id)  # Получаем юзера из базы
         re_photo = re.compile(r'(^.*\.)(jpe?g|png)')
         re_video = re.compile(r'(^.*\.)(mov|mp4|avi)')
@@ -40,6 +41,8 @@ async def zip_file(client, message):
         path = f'temp/{message.document.file_unique_id}'
         for root, dirs, files in os.walk(path):
             for file in files:
+                if error:
+                    break
                 if re_video.match(file.lower()):
                     await status.edit_text(f'Обработка видео {file}')
                     watermark_status = await watermark_utils.draw_logo_on_video(file,
@@ -47,7 +50,8 @@ async def zip_file(client, message):
                                                                                 folder=message.document.file_unique_id)
                     if watermark_status['error']:
                         await status.edit_text(watermark_status['status'])
-                        return
+                        error = True
+                        break
                 elif re_photo.match(file.lower()):
                     await status.edit_text(f'Обработка фотографии {file}')
                     watermark_status = await watermark_utils.draw_logo_on_photo(file,
@@ -55,23 +59,24 @@ async def zip_file(client, message):
                                                                                 folder=message.document.file_unique_id)
                     if watermark_status['error']:
                         await status.edit_text(watermark_status['status'])
-                        return
+                        error = True
+                        break
                 else:
                     await status.edit_text(f'Копирование {file} без добавление ватермарки')
                     shutil.move(f'temp/{message.document.file_unique_id}/{file}',
                                 f'temp/{message.document.file_unique_id}_logo/{file}')
+        if not error:
+            #  Создаем новый архив из файлоы с логотипом
+            await status.edit_text(f'Архивация...')
+            await zip_dir(message.document.file_unique_id)
 
-        #  Создаем новый архив из файлоы с логотипом
-        await status.edit_text(f'Архивация...')
-        await zip_dir(message.document.file_unique_id)
-
-        #   Отправляем архив
-        await client.send_chat_action(message.chat.id, action='upload_document')
-        await client.send_document(chat_id=message.from_user.id,
-                                   document=f'temp/{message.document.file_unique_id}_logo.zip',
-                                   file_name=f'{watermark_utils.get_filename(message.document.file_name)}_logo.zip',
-                                   progress=watermark_utils.upload_callback, progress_args=(status,))
-        await status.delete()
+            #   Отправляем архив
+            await client.send_chat_action(message.chat.id, action='upload_document')
+            await client.send_document(chat_id=message.from_user.id,
+                                       document=f'temp/{message.document.file_unique_id}_logo.zip',
+                                       file_name=f'{watermark_utils.get_filename(message.document.file_name)}_logo.zip',
+                                       progress=watermark_utils.upload_callback, progress_args=(status,))
+            await status.delete()
     except Exception as e:
         await message.reply_text(f'ERROR: {str(e)}')
     watermark_utils.remove_zip(message.document.file_unique_id)  # Удаляем архив, оно нам больше не нужно

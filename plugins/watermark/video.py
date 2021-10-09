@@ -29,14 +29,13 @@ async def video(client, message):
                                                                     user[4], user[1], user[2], user[3])
         if watermark_status['error']:
             await status.edit_text(watermark_status['status'])
-            return
-
-        # Загружаем видео обратно в телеграмм
-        await client.send_chat_action(message.chat.id, action='upload_video')
-        await client.send_video(chat_id=message.from_user.id,
-                                video=f'temp/{message.video.file_unique_id}_logo.mp4',
-                                progress=watermark_utils.upload_callback, progress_args=(status,))
-        await status.delete()
+        else:
+            # Загружаем видео обратно в телеграмм
+            await client.send_chat_action(message.chat.id, action='upload_video')
+            await client.send_video(chat_id=message.from_user.id,
+                                    video=f'temp/{message.video.file_unique_id}_logo.mp4',
+                                    progress=watermark_utils.upload_callback, progress_args=(status,))
+            await status.delete()
     except Exception as e:
         await message.reply_text(f'ERROR: {str(e)}')
     watermark_utils.remove_video(message.video.file_unique_id)   # Удаляем видео, оно нам больше не нужно
@@ -70,14 +69,13 @@ async def video_document(client, message):
                                                                     user[4], user[1], user[2], user[3])
         if watermark_status['error']:
             await status.edit_text(watermark_status['status'])
-            return
-
-        # Загружаем видео обратно в телеграмм
-        await client.send_chat_action(message.chat.id, action='upload_video')
-        await client.send_document(chat_id=message.from_user.id,
-                                   document=f'temp/{message.document.file_unique_id}_logo.mp4',
-                                   file_name=f'{message.document.file_name.split(".")[0]}_logo.mp4',
-                                   progress=watermark_utils.upload_callback, progress_args=(status,))
+        else:
+            # Загружаем видео обратно в телеграмм
+            await client.send_chat_action(message.chat.id, action='upload_video')
+            await client.send_document(chat_id=message.from_user.id,
+                                       document=f'temp/{message.document.file_unique_id}_logo.mp4',
+                                       file_name=f'{message.document.file_name.split(".")[0]}_logo.mp4',
+                                       progress=watermark_utils.upload_callback, progress_args=(status,))
         await status.delete()
     except Exception as e:
         await message.reply_text(f'ERROR: {str(e)}')

@@ -29,14 +29,13 @@ async def photo(client, message):
         watermark_status = await watermark_utils.draw_logo_on_photo(f'{message.photo.file_unique_id}.jpg', user[4], user[1], user[2], user[3])
         if watermark_status['error']:
             await status.edit_text(watermark_status['status'])
-            return
-        
-        # Отправляем фото в телеграмм
-        await client.send_chat_action(message.chat.id, action='upload_photo')
-        await client.send_photo(chat_id=message.from_user.id,
-                                photo=f'temp/{message.photo.file_unique_id}_logo.jpg',
-                                progress=watermark_utils.upload_callback, progress_args=(status,))
-        await status.delete()
+        else:
+            # Отправляем фото в телеграмм
+            await client.send_chat_action(message.chat.id, action='upload_photo')
+            await client.send_photo(chat_id=message.from_user.id,
+                                    photo=f'temp/{message.photo.file_unique_id}_logo.jpg',
+                                    progress=watermark_utils.upload_callback, progress_args=(status,))
+            await status.delete()
     except Exception as e:
         await message.reply_text(f'ERROR: {str(e)}')
     watermark_utils.remove_photo(message.photo.file_unique_id)  # Удаляем фото, оно нам больше не нужно
@@ -72,15 +71,14 @@ async def photo_document(client, message):
                                                                     user[1], user[2], user[3])
         if watermark_status['error']:
             await status.edit_text(watermark_status['status'])
-            return
-        
-        # Отправляем фото в телеграмм
-        await client.send_chat_action(message.chat.id, action='upload_document')
-        await client.send_document(chat_id=message.from_user.id,
-                                   document=f'temp/{message.document.file_unique_id}_logo.jpg',
-                                   file_name=f'{message.document.file_name.split(".")[0]}_logo.jpg',
-                                   progress=watermark_utils.upload_callback, progress_args=(status,))
-        await status.delete()
+        else:
+            # Отправляем фото в телеграмм
+            await client.send_chat_action(message.chat.id, action='upload_document')
+            await client.send_document(chat_id=message.from_user.id,
+                                       document=f'temp/{message.document.file_unique_id}_logo.jpg',
+                                       file_name=f'{message.document.file_name.split(".")[0]}_logo.jpg',
+                                       progress=watermark_utils.upload_callback, progress_args=(status,))
+            await status.delete()
     except Exception as e:
         await message.reply_text(f'ERROR: {str(e)}')
     watermark_utils.remove_photo(message.document.file_unique_id)  # Удаляем фото, оно нам больше не нужно

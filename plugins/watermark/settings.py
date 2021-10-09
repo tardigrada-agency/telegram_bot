@@ -89,7 +89,8 @@ async def mode_select(_, message):
     :param message: Сообщение пользователя которое запустило эту функцию
     :return:
     """
-    await message.reply('Выбери режим добавления логотипа:', reply_markup=keyboards.modes_keyboard)
+    user = watermark_db.get_user(message.from_user.id)
+    await message.reply('Выбери режим добавления логотипа:', reply_markup=keyboards.modes_keyboard[user[2]])
 
 
 @Client.on_callback_query(watermark_utils.new_mode & utils.check_user
