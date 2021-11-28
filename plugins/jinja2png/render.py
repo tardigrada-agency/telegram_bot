@@ -47,7 +47,7 @@ async def text(client, message):
 
     await client.send_chat_action(message.chat.id, action='upload_document')
     await client.send_document(message.from_user.id, f'temp/{image_uuid}.png',
-                               progress=jinaj2png_utils.upload_callback, progress_args=(status,))
+                               progress=jinja2png_utils.upload_callback, progress_args=(status,))
     if not os.path.exists(f'temp/{image_uuid}.png'):
         os.remove(f'temp/{image_uuid}.png')
     ended = time.strftime('%Y-%m-%d %H:%M:%S')
