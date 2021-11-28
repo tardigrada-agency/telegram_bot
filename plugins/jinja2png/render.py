@@ -91,7 +91,7 @@ async def photo(client, message):
     # Sending photo to telegram
     await client.send_chat_action(message.chat.id, action='upload_document')
     await client.send_document(message.from_user.id, f'temp/{image_uuid}.png',
-                               progress=jinaj2png_utils.upload_callback, progress_args=(status,))
+                               progress=jinja2png_utils.upload_callback, progress_args=(status,))
 
     # Cleaning
     await status.delete()
