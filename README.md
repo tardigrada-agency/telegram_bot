@@ -4,7 +4,7 @@ Create database:
 ```
 $ docker-compose up -d & docker-compose run db psql -h db -U postgres
 
-# CREATE DATABSSE {{YOUR_DB_NAME}};
+# CREATE DATABASE {{YOUR_DB_NAME}};
 
 # \c {{YOUR_DB_NAME}};
 
