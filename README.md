@@ -6,7 +6,7 @@ $ docker-compose up -d & docker-compose run db psql -h db -U postgres
 
 # CREATE DATABSSE {{YOUR_DB_NAME}};
 
-# \c vottak;
+# \c {{YOUR_DB_NAME}};
 
 And create tables with sql commands from https://github.com/tardigrada-agency/sql-scheme
 
