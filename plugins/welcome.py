@@ -14,11 +14,11 @@ async def send_welcome(_, message):
     """
 
     text_new = f"Привет!\n" \
-               f"Я бот mediathings созданный для @sotavision, @antresol_avia и @tardigrada_agency\n" \
+               f"Я бот mediathings созданный для @sotaproject, @antresol_avia и @tardigrada_agency\n" \
                f"Твой ID: `{message.from_user.id}`\n" \
                f"Скажи свой ID админу, чтобы он тебя добавил.\n"
     text_old = f"Привет!\n" \
-               f"Я бот mediathings созданный для @sotavision, @antresol_avia и @tardigrada_agency\n" \
+               f"Я бот mediathings созданный для @sotaproject, @antresol_avia и @tardigrada_agency\n" \
                f"Твой ID: `{message.from_user.id}`\n" \
                f"Ты уже в базе, поэтому вот тебе клавиатура :)"
     if db.check_user_in_users(message.from_user.id):
