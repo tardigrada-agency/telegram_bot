@@ -9,6 +9,6 @@ if not db.check_user_in_users(admin_id):
 
 #   Запускаем бота
 plugins = dict(root='plugins')
-app = Client(session_name=os.environ['PYROGRAM_SESSION_STRING'], api_id=os.environ['PYROGRAM_API_ID'],
+app = Client(name='bot', api_id=os.environ['PYROGRAM_API_ID'],
              api_hash=os.environ['PYROGRAM_API_HASH'], plugins=plugins)
 app.run()

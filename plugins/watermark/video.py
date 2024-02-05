@@ -1,6 +1,7 @@
 from plugins.watermark import watermark_utils
 from plugins.watermark import watermark_db
 from pyrogram import Client, filters
+from pyrogram.enums import ChatAction
 import utils
 import time
 import db
@@ -31,7 +32,7 @@ async def video(client, message):
             await status.edit_text(watermark_status['status'])
         else:
             # Загружаем видео обратно в телеграмм
-            await client.send_chat_action(message.chat.id, action='upload_video')
+            await client.send_chat_action(message.chat.id, action=ChatAction.UPLOAD_VIDEO)
             await client.send_video(chat_id=message.from_user.id,
                                     video=f'temp/{message.video.file_unique_id}_logo.mp4',
                                     progress=watermark_utils.upload_callback, progress_args=(status,))
@@ -71,7 +72,7 @@ async def video_document(client, message):
             await status.edit_text(watermark_status['status'])
         else:
             # Загружаем видео обратно в телеграмм
-            await client.send_chat_action(message.chat.id, action='upload_video')
+            await client.send_chat_action(message.chat.id, action=ChatAction.UPLOAD_VIDEO)
             await client.send_document(chat_id=message.from_user.id,
                                        document=f'temp/{message.document.file_unique_id}_logo.mp4',
                                        file_name=f'{message.document.file_name.split(".")[0]}_logo.mp4',

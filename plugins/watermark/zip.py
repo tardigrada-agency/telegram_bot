@@ -1,6 +1,7 @@
 from plugins.watermark import watermark_utils
 from plugins.watermark import watermark_db
 from pyrogram import Client
+from pyrogram.enums import ChatAction
 import zipfile
 import shutil
 import utils
@@ -71,7 +72,7 @@ async def zip_file(client, message):
             await zip_dir(message.document.file_unique_id)
 
             #   Отправляем архив
-            await client.send_chat_action(message.chat.id, action='upload_document')
+            await client.send_chat_action(message.chat.id, action=ChatAction.UPLOAD_DOCUMENT)
             await client.send_document(chat_id=message.from_user.id,
                                        document=f'temp/{message.document.file_unique_id}_logo.zip',
                                        file_name=f'{watermark_utils.get_filename(message.document.file_name)}_logo.zip',

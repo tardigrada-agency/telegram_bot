@@ -1,6 +1,7 @@
 from plugins.watermark import watermark_utils
 from plugins.watermark import watermark_db
 from pyrogram import Client, filters
+from pyrogram.enums import ChatAction
 import utils
 import time
 import db
@@ -31,7 +32,7 @@ async def photo(client, message):
             await status.edit_text(watermark_status['status'])
         else:
             # Отправляем фото в телеграмм
-            await client.send_chat_action(message.chat.id, action='upload_photo')
+            await client.send_chat_action(message.chat.id, action=ChatAction.UPLOAD_PHOTO)
             await client.send_photo(chat_id=message.from_user.id,
                                     photo=f'temp/{message.photo.file_unique_id}_logo.jpg',
                                     progress=watermark_utils.upload_callback, progress_args=(status,))
@@ -73,7 +74,7 @@ async def photo_document(client, message):
             await status.edit_text(watermark_status['status'])
         else:
             # Отправляем фото в телеграмм
-            await client.send_chat_action(message.chat.id, action='upload_document')
+            await client.send_chat_action(message.chat.id, action=ChatAction.UPLOAD_PHOTO)
             await client.send_document(chat_id=message.from_user.id,
                                        document=f'temp/{message.document.file_unique_id}_logo.jpg',
                                        file_name=f'{message.document.file_name.split(".")[0]}_logo.jpg',
